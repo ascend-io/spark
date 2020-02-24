@@ -1,0 +1,5 @@
+filegroup(
+    name = "spark-build-info-bazel.sh",
+    srcs = ["spark-build-info-bazel"],
+    visibility = ["//visibility:public"],
+)

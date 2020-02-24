@@ -1,0 +1,68 @@
+load("@rules_java//java:defs.bzl", "java_library", "java_test")
+
+scala_library(
+    name = "network-shuffle",
+    srcs = glob([
+        "src/main/**/*.java",
+        "src/main/**/*.scala",
+    ]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//common/network-common",
+        "@maven//:com_fasterxml_jackson_core_jackson_annotations",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:com_google_guava_guava",
+        "@maven//:io_dropwizard_metrics_metrics_core",
+        "@maven//:io_netty_netty_all",
+        "@maven//:org_apache_commons_commons_lang3",
+        "@maven//:org_fusesource_leveldbjni_leveldbjni_all",
+        "@maven//:org_slf4j_slf4j_api",
+    ],
+)
+
+java_library(
+    name = "test",
+    srcs = glob(
+        [
+            "src/test/**/*.java",
+        ],
+        exclude = [
+            "src/test/**/*Suite.java",
+        ],
+    ),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":network-shuffle",
+        "//common/network-common",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
+        "@maven//:org_slf4j_slf4j_api",
+    ],
+)
+
+[java_test(
+    name = src[:-5],
+    srcs = [
+        src,
+    ],
+    javacopts = [
+        "-Xep:ArraysAsListPrimitiveArray:WARN",
+    ],
+    resources = glob(["src/test/resources/**"]),
+    deps = [
+        ":network-shuffle",
+        ":test",
+        "//common/network-common",
+        "//common/network-common:test",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:com_google_guava_guava",
+        "@maven//:io_dropwizard_metrics_metrics_core",
+        "@maven//:io_netty_netty_all",
+        "@maven//:junit_junit",
+        "@maven//:org_mockito_mockito_core",
+    ],
+) for src in glob(
+    [
+        "src/test/**/*Suite.java",
+    ],
+)]

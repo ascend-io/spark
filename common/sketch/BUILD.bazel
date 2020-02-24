@@ -1,0 +1,21 @@
+scala_library(
+    name = "sketch",
+    srcs = glob([
+        "src/main/**/*.java",
+        "src/main/**/*.scala",
+    ]),
+)
+
+[scala_test(
+    name = src[:-6],
+    srcs = [
+        src,
+    ],
+    deps = [
+        ":sketch",
+    ],
+) for src in glob(
+    [
+        "src/test/**/*Suite.scala",
+    ],
+)]

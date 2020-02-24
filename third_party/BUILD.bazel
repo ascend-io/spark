@@ -1,0 +1,15 @@
+load(
+    "@io_bazel_rules_scala//scala:scala_import.bzl",
+    "scala_import",
+)
+
+scala_import(
+    name = "scalatest",
+    jars = [
+        "@maven//:org_scalatest_scalatest_2_12",
+        "@maven//:org_scalactic_scalactic_2_12",
+        "@maven//:org_scalacheck_scalacheck_2_12",
+        "@maven//:org_scalatestplus_scalacheck_1_14_2_12",
+    ],
+    visibility = ["//visibility:public"],
+)

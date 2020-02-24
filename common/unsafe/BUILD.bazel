@@ -1,0 +1,57 @@
+load("@rules_java//java:defs.bzl", "java_test")
+
+scala_library(
+    name = "unsafe",
+    srcs = glob([
+        "src/main/**/*.java",
+        "src/main/**/*.scala",
+    ]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//common/tags",
+        "@maven//:com_esotericsoftware_kryo",
+        "@maven//:com_google_code_findbugs_jsr305",
+        "@maven//:com_google_guava_guava",
+    ],
+)
+
+[java_test(
+    name = src[:-5],
+    srcs = [
+        src,
+    ],
+    deps = [
+        ":unsafe",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
+        "@maven//:org_scala_lang_scala_library",
+    ],
+) for src in glob(
+    [
+        "src/test/**/*Suite.java",
+        "src/test/**/*Benchmark.java",
+    ],
+    exclude = [
+        # currently segvs, at least in some cases
+        "src/test/**/PlatformUtilSuite.java",
+    ],
+)]
+
+[scala_test(
+    name = src[:-6],
+    srcs = [
+        src,
+    ],
+    deps = [
+        ":unsafe",
+        "@maven//:com_esotericsoftware_kryo",
+        "@maven//:org_apache_commons_commons_text",
+        "@maven//:org_scalacheck_scalacheck_2_12",
+        "@maven//:org_scalatestplus_scalacheck_1_14_2_12",
+    ],
+) for src in glob(
+    [
+        "src/test/**/*Suite.scala",
+        "src/test/**/*Benchmark.scala",
+    ],
+)]
