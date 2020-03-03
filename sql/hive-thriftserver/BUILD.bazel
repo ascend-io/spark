@@ -1,12 +1,13 @@
 load("@rules_java//java:defs.bzl", "java_binary")
+load("//:defs.bzl", "hive", "scala_rje")
 
 scala_library(
-    name = "library",
+    name = "hive-thriftserver",
     srcs = glob([
         "src/main/scala/**/*.scala",
         "src/main/java/**/*.java",
-        "v2.3/src/main/scala/**/*.scala",
-        "v2.3/src/main/java/**/*.java",
+        "v%s/src/main/scala/**/*.scala" % hive,
+        "v%s/src/main/java/**/*.java" % hive,
     ]),
     visibility = ["//visibility:public"],
     deps = [
@@ -44,23 +45,135 @@ scala_library(
         "@maven//:org_eclipse_jetty_jetty_server",
         "@maven//:org_eclipse_jetty_jetty_servlet",
         "@maven//:org_eclipse_jetty_jetty_util",
-        "@maven//:org_scala_lang_modules_scala_xml_2_12",
+        "@maven//:org_scala_lang_modules_scala_xml_" + scala_rje,
         "@maven//:org_slf4j_slf4j_api",
     ],
 )
 
-# to run: bazel build //sql/hive-thriftserver:hive-thriftserver && ./bazel-bin/sql/hive-thriftserver/hive-thriftserver --class org.apache.spark.sql.hive.thriftserver.HiveThriftServer2 --name 'Thrift JDBC/ODBC Server' --master local spark-internal
+# to run: bazel build //sql/hive-thriftserver:server && ./bazel-bin/sql/hive-thriftserver/server --class org.apache.spark.sql.hive.thriftserver.HiveThriftServer2 --name 'Thrift JDBC/ODBC Server' --master local spark-internal
 
 # N.B.: at this point, a fat/deploy jar won't work for this: the datanucleus stuff has "plugin.xml" resources that all
 # have the same name to if you create the typical fat jar that just does a merge, it fails to bootstrap
 
 java_binary(
-    name = "hive-thriftserver",
+    name = "server",
+    data = glob(["test-files/**"]),
     jvm_flags = [
         "-Xmx1g",
     ],
     main_class = "org.apache.spark.deploy.SparkSubmit",
     runtime_deps = [
-        ":library",
+        ":hive-thriftserver",
     ],
 )
+
+scala_library(
+    name = "test",
+    srcs = glob(
+        [
+            "src/test/scala/**/*.scala",
+            "src/test/java/**/*.java",
+        ],
+        exclude = [
+            "src/test/java/**/*Suite.java",
+            "src/test/java/**/*Test.java",
+            "src/test/java/**/*Benchmark.java",
+            "src/test/scala/**/*Suite.scala",
+            "src/test/scala/**/*Suites.scala",
+            "src/test/scala/**/*Test.scala",
+            "src/test/scala/**/*Benchmark.scala",
+        ],
+    ) + glob([
+        "src/test/**/HiveThriftServer2Suites.scala",
+    ]),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":hive-thriftserver",
+        "//core",
+        "//core:test",
+        "//sql/catalyst",
+        "//sql/catalyst:test",
+        "//sql/core",
+        "//sql/core:test",
+        "//sql/hive",
+        "//sql/hive:test",
+        "@maven//:com_google_guava_guava",
+        "@maven//:org_apache_hadoop_hadoop_common",
+        "@maven//:org_apache_hive_hive_common",
+        "@maven//:org_apache_hive_hive_jdbc",
+        "@maven//:org_apache_hive_hive_service_rpc",
+        "@maven//:org_apache_thrift_libthrift",
+        "@maven//:org_scalatest_scalatest_" + scala_rje,
+        "@maven//:org_scalactic_scalactic_" + scala_rje,
+        "@maven//:org_slf4j_slf4j_api",
+    ],
+)
+
+[scala_test(
+    name = src[:-6],
+    srcs = [
+        src,
+    ],
+    data = [
+        "//bin",
+        "//sbin",
+    ],
+    resources = glob([
+        "src/test/resources/**",
+    ]),
+    unused_dependency_checker_mode = "off",
+    runtime_deps = [
+        "@maven//:org_apache_avro_avro",
+    ],
+    deps = [
+        ":hive-thriftserver",
+        ":test",
+        "//common/kvstore",
+        "//common/unsafe",
+        "//core",
+        "//core:test",
+        "//launcher",
+        "//sql/catalyst",
+        "//sql/catalyst:test",
+        "//sql/core",
+        "//sql/core:test",
+        "//sql/hive",
+        "//sql/hive:test",
+        "@maven//:com_esotericsoftware_kryo",
+        "@maven//:com_google_guava_guava",
+        "@maven//:javax_servlet_javax_servlet_api",
+        "@maven//:log4j_log4j",
+        "@maven//:net_sourceforge_htmlunit_htmlunit",
+        "@maven//:org_apache_commons_commons_lang3",
+        "@maven//:org_apache_hadoop_hadoop_common",
+        "@maven//:org_apache_hive_hive_cli",
+        "@maven//:org_apache_hive_hive_common",
+        "@maven//:org_apache_hive_hive_exec_core",
+        "@maven//:org_apache_hive_hive_jdbc",
+        "@maven//:org_apache_hive_hive_serde",
+        "@maven//:org_apache_hive_hive_service_rpc",
+        "@maven//:org_apache_thrift_libthrift",
+        "@maven//:org_mockito_mockito_core",
+        "@maven//:org_seleniumhq_selenium_selenium_api",
+        "@maven//:org_seleniumhq_selenium_selenium_htmlunit_driver",
+        "@maven//:org_slf4j_slf4j_api",
+        "@maven//:org_w3c_css_sac",
+    ],
+) for src in glob(
+    [
+        "src/test/scala/**/*Suite.scala",
+        "src/test/scala/**/*Suites.scala",
+        "src/test/scala/**/*Benchmark.scala",
+        "src/test/scala/**/*Test.scala",
+    ],
+    exclude = [
+        "src/test/scala/**/ThriftServerQueryTestSuit.scala",
+        "src/test/scala/**/SparkThriftServerProtocolVersionsSuite.scala",
+        "src/test/scala/**/SparkMetadataOperationSuite.scala",
+        "src/test/scala/**/JdbcConnectionUriSuite.scala",
+        "src/test/scala/**/HiveThriftServer2Suites.scala",
+        "src/test/scala/**/CliSuite.scala",
+        "src/test/scala/**/HiveTypeCoercionSuite.scala",
+        "src/test/scala/**/ThriftServerQueryTestSuite.scala",
+    ],
+)]

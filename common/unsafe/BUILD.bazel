@@ -1,4 +1,5 @@
 load("@rules_java//java:defs.bzl", "java_test")
+load("//:defs.bzl", "scala_rje")
 
 scala_library(
     name = "unsafe",
@@ -46,8 +47,7 @@ scala_library(
         ":unsafe",
         "@maven//:com_esotericsoftware_kryo",
         "@maven//:org_apache_commons_commons_text",
-        "@maven//:org_scalacheck_scalacheck_2_12",
-        "@maven//:org_scalatestplus_scalacheck_1_14_2_12",
+        "@maven//:org_scalacheck_scalacheck_" + scala_rje,
     ],
 ) for src in glob(
     [

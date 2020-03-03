@@ -4,6 +4,7 @@ scala_library(
         "src/main/**/*.java",
         "src/main/**/*.scala",
     ]),
+    visibility = ["//visibility:public"],
 )
 
 [scala_test(

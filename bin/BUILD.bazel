@@ -1,0 +1,11 @@
+filegroup(
+    name = "bin",
+    srcs = [
+        "find-spark-home",
+        "load-spark-env.sh",
+        "spark-class",
+        "spark-sql",
+        "spark-submit",
+    ],
+    visibility = ["//visibility:public"],
+)

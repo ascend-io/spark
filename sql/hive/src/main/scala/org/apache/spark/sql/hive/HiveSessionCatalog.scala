@@ -57,10 +57,6 @@ private[sql] class HiveSessionCatalog(
       parser,
       functionResourceLoader) {
 
-  System.err.println(s"SMP $this $metastoreCatalog")
-  (new Exception).printStackTrace()
-
-
   /**
    * Constructs a [[Expression]] based on the provided class that represents a function.
    *

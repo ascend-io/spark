@@ -2,14 +2,38 @@ load(
     "@io_bazel_rules_scala//scala:scala_import.bzl",
     "scala_import",
 )
+load("//:defs.bzl", "scala_rje")
 
 scala_import(
     name = "scalatest",
     jars = [
-        "@maven//:org_scalatest_scalatest_2_12",
-        "@maven//:org_scalactic_scalactic_2_12",
-        "@maven//:org_scalacheck_scalacheck_2_12",
-        "@maven//:org_scalatestplus_scalacheck_1_14_2_12",
+        "@maven//:org_scalatest_scalatest_" + scala_rje,
+        "@maven//:org_scalactic_scalactic_" + scala_rje,
+        "@maven//:org_scalacheck_scalacheck_" + scala_rje,
+    ],
+    visibility = ["//visibility:public"],
+)
+
+scala_import(
+    name = "hive",
+    jars = [
+        "@maven//:org_apache_hive_hive_common",
+        "@maven//:org_apache_hive_hive_exec_core",
+        "@maven//:org_apache_hive_hive_metastore",
+        "@maven//:org_apache_hive_hive_serde",
+        "@maven//:org_apache_hive_hive_storage_api",
+        "@maven//:org_apache_hive_shims_hive_shims_common",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+scala_import(
+    name = "datanucleus",
+    jars = [
+        # "@maven//:javax_jdo_jdo_api",
+        "@maven//:org_datanucleus_datanucleus_api_jdo",
+        "@maven//:org_datanucleus_datanucleus_rdbms",
+        "@maven//:org_datanucleus_javax_jdo",
     ],
     visibility = ["//visibility:public"],
 )
