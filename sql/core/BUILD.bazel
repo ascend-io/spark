@@ -242,6 +242,7 @@ scala_library(
     ]),
     unused_dependency_checker_mode = "off",
     deps = [
+        "@maven//:net_sourceforge_htmlunit_htmlunit",
         ":core",
         ":test",
         "//common/kvstore",

@@ -86,6 +86,7 @@ scala_library(
     ]),
     visibility = ["//visibility:public"],
     deps = [
+        "@maven//:log4j_log4j",
         ":catalyst",
         "//common/unsafe",
         "//core",
