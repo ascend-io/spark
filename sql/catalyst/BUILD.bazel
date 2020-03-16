@@ -86,12 +86,12 @@ scala_library(
     ]),
     visibility = ["//visibility:public"],
     deps = [
-        "@maven//:log4j_log4j",
         ":catalyst",
         "//common/unsafe",
         "//core",
         "//core:test",
         "@maven//:com_esotericsoftware_kryo",
+        "@maven//:log4j_log4j",
         "@maven//:org_apache_hadoop_hadoop_common",
         "@maven//:org_scalatest_scalatest_" + scala_rje,
         "@maven//:org_scalacheck_scalacheck_" + scala_rje,
