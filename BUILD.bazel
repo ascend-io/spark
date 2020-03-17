@@ -1,0 +1,12 @@
+filegroup(
+    name = "files",
+    srcs = [
+        "//bin",
+        "//sbin",
+    ] + glob([
+        "resource-managers/kubernetes/docker/src/main/dockerfiles/spark/entrypoint.sh",
+        "python/lib/**",
+        "python/pyspark/**",
+    ]),
+    visibility = ["//visibility:public"],
+)
