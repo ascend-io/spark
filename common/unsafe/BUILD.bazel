@@ -23,9 +23,10 @@ scala_library(
     ],
     deps = [
         ":unsafe",
+        "@io_bazel_rules_scala_scala_compiler",
+        "@io_bazel_rules_scala_scala_library",
         "@maven//:com_google_guava_guava",
         "@maven//:junit_junit",
-        "@maven//:org_scala_lang_scala_library",
     ],
 ) for src in glob(
     [

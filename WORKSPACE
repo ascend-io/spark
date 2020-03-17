@@ -80,8 +80,8 @@ maven_install(
     excluded_artifacts = excluded_artifacts,
     maven_install_json = "@//:maven_install.json",
     repositories = maven_servers,
+    strict_visibility = True,
     version_conflict_policy = "pinned",
-    # strict_visibility = True
 )
 
 load("@maven//:defs.bzl", "pinned_maven_install")

@@ -221,6 +221,7 @@ scala_library(
         "//common/unsafe",
         "//launcher",
         "//launcher:test",
+        "@io_bazel_rules_scala_scala_library",
         "@maven//:com_google_guava_guava",
         "@maven//:commons_io_commons_io",
         "@maven//:junit_junit",
@@ -229,7 +230,6 @@ scala_library(
         "@maven//:org_apache_hadoop_hadoop_mapreduce_client_core",
         "@maven//:org_hamcrest_hamcrest",
         "@maven//:org_mockito_mockito_core",
-        "@maven//:org_scala_lang_scala_library",
     ],
 ) for src in glob(
     [

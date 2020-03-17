@@ -11,9 +11,9 @@ scala_library(
         "//core",
         "//sql/catalyst",
         "//sql/core",
+        "@io_bazel_rules_scala_scala_compiler",
         "@maven//:org_apache_hadoop_hadoop_common",
         "@maven//:org_apache_xbean_xbean_asm7_shaded",
-        "@maven//:org_scala_lang_scala_compiler",
         "@maven//:org_slf4j_slf4j_api",
     ],
 )
@@ -40,11 +40,11 @@ scala_library(
         "//core:test",
         "//sql/catalyst",
         "//sql/core",
+        "@io_bazel_rules_scala_scala_compiler",
         "@maven//:com_google_guava_guava",
         "@maven//:log4j_log4j",
         "@maven//:org_apache_commons_commons_text",
         "@maven//:org_mockito_mockito_core",
-        "@maven//:org_scala_lang_scala_compiler",
         "@maven//:org_slf4j_slf4j_api",
     ],
 ) for src in glob(
