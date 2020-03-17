@@ -1,0 +1,56 @@
+scala_library(
+    name = "repl",
+    srcs = glob([
+        "src/main/scala/**/*.scala",
+    ]),
+    resources = glob([
+        "src/main/resources/**",
+    ]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//core",
+        "//sql/catalyst",
+        "//sql/core",
+        "@maven//:org_apache_hadoop_hadoop_common",
+        "@maven//:org_apache_xbean_xbean_asm7_shaded",
+        "@maven//:org_scala_lang_scala_compiler",
+        "@maven//:org_slf4j_slf4j_api",
+    ],
+)
+
+[scala_test(
+    name = src[:-6],
+    srcs = [
+        src,
+    ],
+    data = [
+        "//bin",
+    ],
+    jvm_flags = [
+        "-Dspark.test.home=.",
+    ],
+    resources = glob([
+        "src/test/resources/**",
+    ]),
+    unused_dependency_checker_mode = "off",
+    deps = [
+        ":repl",
+        "//common/network-common",
+        "//core",
+        "//core:test",
+        "//sql/catalyst",
+        "//sql/core",
+        "@maven//:com_google_guava_guava",
+        "@maven//:log4j_log4j",
+        "@maven//:org_apache_commons_commons_text",
+        "@maven//:org_mockito_mockito_core",
+        "@maven//:org_scala_lang_scala_compiler",
+        "@maven//:org_slf4j_slf4j_api",
+    ],
+) for src in glob(
+    [
+        "src/test/**/*Suite.scala",
+        "src/test/**/*Benchmark.scala",
+        "src/test/**/*Test.scala",
+    ],
+)]

@@ -39,6 +39,7 @@ versions = {
     "compress-lzf": "1.0.4",
     "curator": "2.7.1",
     "dropwizard": "4.1.1",
+    "fabric8": "4.9.0",
     "guava": "28.2-jre",
     "h2": "1.4.195",
     "hadoop": "3.2.1",
@@ -54,6 +55,7 @@ versions = {
     "jaxb-runtime": "2.3.2",
     "jersey": "2.30",
     "jetty": "9.4.25.v20191220",
+    "jmock": "2.12.0",
     "jodd": "3.5.2",
     "jpam": "1.1",
     "json4s": "3.6.7",
@@ -69,6 +71,7 @@ versions = {
     "mockito-core": "3.2.4",
     "mysql": "5.1.38",
     "netty": "4.1.44.Final",
+    "okhttp": "3.12.10",
     "orc": "1.5.9",
     "parquet": "1.10.1",
     "postgresql": "42.2.6",
@@ -90,6 +93,11 @@ versions = {
 }
 
 artifacts = [
+    "org.jmock:jmock-junit4:{jmock}",
+    "org.jmock:jmock",
+    "com.squareup.okhttp3:okhttp",
+    "io.fabric8:kubernetes-client:{fabric8}",
+    "io.fabric8:kubernetes-model:{fabric8}",
     "mysql:mysql-connector-java:{mysql}",
     "org.postgresql:postgresql",
     "com.h2database:h2",
