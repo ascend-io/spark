@@ -21,48 +21,56 @@ scala_library(
     ],
 )
 
-scala_library(
-    name = "test",
-    srcs = glob(
-        [
-            "src/test/**/*.java",
+[
+    scala_library(
+        name = "test",
+        srcs = glob(
+            [
+                "src/test/**/*.java",
+            ],
+            exclude = [
+                "src/test/**/*Suite.java",
+            ],
+        ) + glob([
+            "src/test/**/StreamSuite.java",
+        ]),
+        visibility = ["//visibility:public"],
+        deps = [
+            ":network-common",
+            "@maven//:com_google_guava_guava",
+            "@maven//:io_netty_netty_all",
+            "@maven//:junit_junit",
         ],
-        exclude = [
+    )
+    for _ in bazel_tests_enabled
+    if _
+]
+
+[
+    [java_test(
+        name = src[:-5],
+        srcs = [
+            src,
+        ],
+        resources = glob(["src/test/resources/**"]),
+        deps = [
+            ":network-common",
+            ":test",
+            "@maven//:com_google_guava_guava",
+            "@maven//:io_dropwizard_metrics_metrics_core",
+            "@maven//:io_netty_netty_all",
+            "@maven//:junit_junit",
+            "@maven//:org_apache_commons_commons_crypto",
+            "@maven//:org_apache_commons_commons_lang3",
+            "@maven//:org_hamcrest_hamcrest",
+            "@maven//:org_mockito_mockito_core",
+            "@maven//:org_slf4j_slf4j_api",
+        ],
+    ) for src in glob(
+        [
             "src/test/**/*Suite.java",
         ],
-    ) + glob([
-        "src/test/**/StreamSuite.java",
-    ]),
-    visibility = ["//visibility:public"],
-    deps = [
-        ":network-common",
-        "@maven//:com_google_guava_guava",
-        "@maven//:io_netty_netty_all",
-        "@maven//:junit_junit",
-    ],
-)
-
-[java_test(
-    name = src[:-5],
-    srcs = [
-        src,
-    ],
-    resources = glob(["src/test/resources/**"]),
-    deps = [
-        ":network-common",
-        ":test",
-        "@maven//:com_google_guava_guava",
-        "@maven//:io_dropwizard_metrics_metrics_core",
-        "@maven//:io_netty_netty_all",
-        "@maven//:junit_junit",
-        "@maven//:org_apache_commons_commons_crypto",
-        "@maven//:org_apache_commons_commons_lang3",
-        "@maven//:org_hamcrest_hamcrest",
-        "@maven//:org_mockito_mockito_core",
-        "@maven//:org_slf4j_slf4j_api",
-    ],
-) for src in glob(
-    [
-        "src/test/**/*Suite.java",
-    ],
-)]
+    )]
+    for _ in bazel_tests_enabled
+    if _
+]

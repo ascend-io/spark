@@ -9,56 +9,64 @@ scala_library(
     visibility = ["//visibility:public"],
 )
 
-java_library(
-    name = "test",
-    srcs = glob(
+[
+    java_library(
+        name = "test",
+        srcs = glob(
+            [
+                "src/test/java/**/*.java",
+            ],
+            exclude = [
+                "src/test/java/**/*Suite.java",
+            ],
+        ) + glob([
+            "src/test/**/BaseSuite.java",
+        ]),
+        visibility = ["//visibility:public"],
+        deps = [
+            ":launcher",
+            "@maven//:junit_junit",
+            "@maven//:org_slf4j_jul_to_slf4j",
+        ],
+    )
+    for _ in bazel_tests_enabled
+    if _
+]
+
+[
+    [java_test(
+        name = src[:-5],
+        srcs = [
+            src,
+        ],
+        data = glob([
+            "src/test/resources/**",
+        ]),
+        jvm_flags = [
+            "-Dspark.test.home=.",
+        ],
+        resources = glob([
+            "src/test/resources/**",
+        ]),
+        runtime_deps = [
+            "@maven//:org_slf4j_slf4j_log4j12",
+        ],
+        deps = [
+            ":launcher",
+            ":test",
+            "@maven//:junit_junit",
+            "@maven//:log4j_log4j",
+            "@maven//:org_mockito_mockito_core",
+        ],
+    ) for src in glob(
         [
-            "src/test/java/**/*.java",
+            "src/test/**/*Suite.java",
+            "src/test/**/*Benchmark.java",
         ],
         exclude = [
-            "src/test/java/**/*Suite.java",
+            "src/test/**/BaseSuite.java",
         ],
-    ) + glob([
-        "src/test/**/BaseSuite.java",
-    ]),
-    visibility = ["//visibility:public"],
-    deps = [
-        ":launcher",
-        "@maven//:junit_junit",
-        "@maven//:org_slf4j_jul_to_slf4j",
-    ],
-)
-
-[java_test(
-    name = src[:-5],
-    srcs = [
-        src,
-    ],
-    data = glob([
-        "src/test/resources/**",
-    ]),
-    jvm_flags = [
-        "-Dspark.test.home=.",
-    ],
-    resources = glob([
-        "src/test/resources/**",
-    ]),
-    runtime_deps = [
-        "@maven//:org_slf4j_slf4j_log4j12",
-    ],
-    deps = [
-        ":launcher",
-        ":test",
-        "@maven//:junit_junit",
-        "@maven//:log4j_log4j",
-        "@maven//:org_mockito_mockito_core",
-    ],
-) for src in glob(
-    [
-        "src/test/**/*Suite.java",
-        "src/test/**/*Benchmark.java",
-    ],
-    exclude = [
-        "src/test/**/BaseSuite.java",
-    ],
-)]
+    )]
+    for _ in bazel_tests_enabled
+    if _
+]

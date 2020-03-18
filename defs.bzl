@@ -15,6 +15,8 @@ def version_artifacts(artifacts):
 
     return versioned
 
+bazel_tests_enabled = [False]
+
 scala = "2.12"
 scala_minor = "10"
 scala_rje = "2_12"

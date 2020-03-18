@@ -16,43 +16,51 @@ scala_library(
     ],
 )
 
-[java_test(
-    name = src[:-5],
-    srcs = [
-        src,
-    ],
-    deps = [
-        ":unsafe",
-        "@io_bazel_rules_scala_scala_compiler",
-        "@io_bazel_rules_scala_scala_library",
-        "@maven//:com_google_guava_guava",
-        "@maven//:junit_junit",
-    ],
-) for src in glob(
-    [
-        "src/test/**/*Suite.java",
-        "src/test/**/*Benchmark.java",
-    ],
-    exclude = [
-        # currently segvs, at least in some cases
-        "src/test/**/PlatformUtilSuite.java",
-    ],
-)]
+[
+    [java_test(
+        name = src[:-5],
+        srcs = [
+            src,
+        ],
+        deps = [
+            ":unsafe",
+            "@io_bazel_rules_scala_scala_compiler",
+            "@io_bazel_rules_scala_scala_library",
+            "@maven//:com_google_guava_guava",
+            "@maven//:junit_junit",
+        ],
+    ) for src in glob(
+        [
+            "src/test/**/*Suite.java",
+            "src/test/**/*Benchmark.java",
+        ],
+        exclude = [
+            # currently segvs, at least in some cases
+            "src/test/**/PlatformUtilSuite.java",
+        ],
+    )]
+    for _ in bazel_tests_enabled
+    if _
+]
 
-[scala_test(
-    name = src[:-6],
-    srcs = [
-        src,
-    ],
-    deps = [
-        ":unsafe",
-        "@maven//:com_esotericsoftware_kryo",
-        "@maven//:org_apache_commons_commons_text",
-        "@maven//:org_scalacheck_scalacheck_" + scala_rje,
-    ],
-) for src in glob(
-    [
-        "src/test/**/*Suite.scala",
-        "src/test/**/*Benchmark.scala",
-    ],
-)]
+[
+    [scala_test(
+        name = src[:-6],
+        srcs = [
+            src,
+        ],
+        deps = [
+            ":unsafe",
+            "@maven//:com_esotericsoftware_kryo",
+            "@maven//:org_apache_commons_commons_text",
+            "@maven//:org_scalacheck_scalacheck_" + scala_rje,
+        ],
+    ) for src in glob(
+        [
+            "src/test/**/*Suite.scala",
+            "src/test/**/*Benchmark.scala",
+        ],
+    )]
+    for _ in bazel_tests_enabled
+    if _
+]

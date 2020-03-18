@@ -6,3 +6,5 @@ load(
     "scala_library",
     "scala_test",
 )
+
+load("//:defs.bzl", "bazel_tests_enabled")

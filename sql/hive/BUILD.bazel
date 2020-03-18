@@ -47,196 +47,208 @@ scala_library(
 #     ],
 # )
 
-scala_library(
-    name = "test",
-    srcs = glob(
+[
+    scala_library(
+        name = "test",
+        srcs = glob(
+            [
+                "src/test/scala/**/*.scala",
+                "src/test/java/**/*.java",
+            ],
+            exclude = [
+                "src/test/java/**/*Suite.java",
+                "src/test/java/**/*Test.java",
+                "src/test/java/**/*Benchmark.java",
+                "src/test/scala/**/*Suite.scala",
+                "src/test/scala/**/*Suites.scala",
+                "src/test/scala/**/*Test.scala",
+                "src/test/scala/**/*Benchmark.scala",
+            ],
+        ) + glob([
+            "src/test/**/HiveQuerySuite.scala",
+            "src/test/**/HiveUDFSuite.scala",
+            "src/test/**/HiveClientUserNameSuite.scala",
+            "src/test/**/HiveComparisonTest.scala",
+            "src/test/**/ParquetPartitioningTest.scala",
+            "src/test/**/SQLViewSuite.scala",
+            "src/test/**/HivePartitionFilteringSuite.scala",
+            "src/test/**/HiveVersionSuite.scala",
+            "src/test/**/HadoopFsRelationTest.scala",
+            "src/test/**/InsertSuite.scala",
+        ]),
+        visibility = ["//visibility:public"],
+        deps = [
+            ":hive",
+            "//common/network-common",
+            "//common/tags",
+            "//core",
+            "//core:test",
+            "//sql/catalyst",
+            "//sql/catalyst:test",
+            "//sql/core",
+            "//sql/core:test",
+            "//third_party:hive",
+            "@maven//:com_esotericsoftware_kryo",
+            "@maven//:com_google_guava_guava",
+            "@maven//:commons_codec_commons_codec",
+            "@maven//:commons_lang_commons_lang",
+            "@maven//:log4j_log4j",
+            "@maven//:org_apache_commons_commons_lang3",
+            "@maven//:org_apache_hadoop_hadoop_common",
+            "@maven//:org_apache_hadoop_hadoop_mapreduce_client_core",
+            "@maven//:org_apache_parquet_parquet_hadoop",
+            "@maven//:org_apache_thrift_libthrift",
+            "@maven//:org_scalatest_scalatest_" + scala_rje,
+            "@maven//:org_scalactic_scalactic_" + scala_rje,
+            "@maven//:org_apache_orc_orc_core",
+            "@maven//:org_slf4j_slf4j_api",
+        ],
+    )
+    for _ in bazel_tests_enabled
+    if _
+]
+
+[
+    [java_test(
+        name = src[:-5],
+        srcs = [
+            src,
+        ],
+        deps = [
+            ":hive",
+            ":test",
+            "//core",
+            "//sql/catalyst",
+            "//sql/core",
+            "//sql/core:test",
+            "@maven//:junit_junit",
+            "@maven//:org_apache_hadoop_hadoop_common",
+        ],
+    ) for src in glob(
         [
-            "src/test/scala/**/*.scala",
-            "src/test/java/**/*.java",
+            "src/test/**/*Suite.java",
+            "src/test/**/*Test.java",
+            "src/test/**/*Benchmark.java",
+            "v%s/src/test/java/**/*Suite.java" % hive,
+            "v%s/src/test/java/**/*Test.java" % hive,
+            "v%s/src/test/java/**/*Benchmark.java" % hive,
         ],
         exclude = [
-            "src/test/java/**/*Suite.java",
-            "src/test/java/**/*Test.java",
-            "src/test/java/**/*Benchmark.java",
+            "src/test/**/JavaMetastoreDataSourcesSuite.java",
+            "src/test/**/JavaDataFrameSuite.java",
+        ],
+    )]
+    for _ in bazel_tests_enabled
+    if _
+]
+
+[
+    [scala_test(
+        name = src[:-6],
+        size = "large",
+        srcs = [
+            src,
+        ],
+        data = [
+            file
+            for file in glob(["src/test/resources/**"])
+            if not " " in file
+        ] + [
+            "//bin",
+        ],
+        jvm_flags = [
+            "-Dspark.test.home=.",
+            "-Dio.netty.tryReflectionSetAccessible=true",
+        ],
+        resources = [
+            file
+            for file in glob(["src/test/resources/**"])
+            if not " " in file
+        ],
+        unused_dependency_checker_mode = "off",
+        runtime_deps = [
+            "@maven//:org_apache_avro_avro_mapred",
+            "@maven//:org_apache_derby_derby",
+            "@maven//:org_jodd_jodd_core",
+        ],
+        deps = [
+            ":hive",
+            ":test",
+            "//core",
+            "//core:test",
+            "//sql/catalyst",
+            "//sql/catalyst:test",
+            "//sql/core",
+            "//sql/core:test",
+            "@maven//:org_slf4j_slf4j_api",
+            "@maven//:org_scalacheck_scalacheck_" + scala_rje,
+            "//common/network-common",
+            "//common/tags:test",
+            "//launcher",
+            "//third_party:datanucleus",
+            "//third_party:hive",
+            "@com_google_protobuf//:protobuf_java",
+            "@maven//:com_esotericsoftware_kryo",
+            "@maven//:com_google_guava_guava",
+            "@maven//:com_jolbox_bonecp",
+            "@maven//:commons_io_commons_io",
+            "@maven//:io_dropwizard_metrics_metrics_core",
+            "@maven//:org_apache_commons_commons_lang3",
+            "@maven//:org_apache_hadoop_hadoop_common",
+            "@maven//:org_apache_hadoop_hadoop_mapreduce_client_core",
+            "@maven//:org_apache_orc_orc_core",
+            "@maven//:org_apache_parquet_parquet_column",
+            "@maven//:org_apache_parquet_parquet_common",
+            "@maven//:org_apache_parquet_parquet_hadoop",
+            "@maven//:org_apache_thrift_libthrift",
+            "@maven//:org_json4s_json4s_ast_" + scala_rje,
+            "@maven//:org_json4s_json4s_core_" + scala_rje,
+            "@maven//:org_json4s_json4s_jackson_" + scala_rje,
+            "@maven//:commons_codec_commons_codec",
+        ],
+    ) for src in glob(
+        [
             "src/test/scala/**/*Suite.scala",
             "src/test/scala/**/*Suites.scala",
-            "src/test/scala/**/*Test.scala",
             "src/test/scala/**/*Benchmark.scala",
+            "src/test/scala/**/*Test.scala",
         ],
-    ) + glob([
-        "src/test/**/HiveQuerySuite.scala",
-        "src/test/**/HiveUDFSuite.scala",
-        "src/test/**/HiveClientUserNameSuite.scala",
-        "src/test/**/HiveComparisonTest.scala",
-        "src/test/**/ParquetPartitioningTest.scala",
-        "src/test/**/SQLViewSuite.scala",
-        "src/test/**/HivePartitionFilteringSuite.scala",
-        "src/test/**/HiveVersionSuite.scala",
-        "src/test/**/HadoopFsRelationTest.scala",
-        "src/test/**/InsertSuite.scala",
-    ]),
-    visibility = ["//visibility:public"],
-    deps = [
-        ":hive",
-        "//common/network-common",
-        "//common/tags",
-        "//core",
-        "//core:test",
-        "//sql/catalyst",
-        "//sql/catalyst:test",
-        "//sql/core",
-        "//sql/core:test",
-        "//third_party:hive",
-        "@maven//:com_esotericsoftware_kryo",
-        "@maven//:com_google_guava_guava",
-        "@maven//:commons_codec_commons_codec",
-        "@maven//:commons_lang_commons_lang",
-        "@maven//:log4j_log4j",
-        "@maven//:org_apache_commons_commons_lang3",
-        "@maven//:org_apache_hadoop_hadoop_common",
-        "@maven//:org_apache_hadoop_hadoop_mapreduce_client_core",
-        "@maven//:org_apache_parquet_parquet_hadoop",
-        "@maven//:org_apache_thrift_libthrift",
-        "@maven//:org_scalatest_scalatest_" + scala_rje,
-        "@maven//:org_scalactic_scalactic_" + scala_rje,
-        "@maven//:org_apache_orc_orc_core",
-        "@maven//:org_slf4j_slf4j_api",
-    ],
-)
-
-[java_test(
-    name = src[:-5],
-    srcs = [
-        src,
-    ],
-    deps = [
-        ":hive",
-        ":test",
-        "//core",
-        "//sql/catalyst",
-        "//sql/core",
-        "//sql/core:test",
-        "@maven//:junit_junit",
-        "@maven//:org_apache_hadoop_hadoop_common",
-    ],
-) for src in glob(
-    [
-        "src/test/**/*Suite.java",
-        "src/test/**/*Test.java",
-        "src/test/**/*Benchmark.java",
-        "v%s/src/test/java/**/*Suite.java" % hive,
-        "v%s/src/test/java/**/*Test.java" % hive,
-        "v%s/src/test/java/**/*Benchmark.java" % hive,
-    ],
-    exclude = [
-        "src/test/**/JavaMetastoreDataSourcesSuite.java",
-        "src/test/**/JavaDataFrameSuite.java",
-    ],
-)]
-
-[scala_test(
-    name = src[:-6],
-    size = "large",
-    srcs = [
-        src,
-    ],
-    data = [
-        file
-        for file in glob(["src/test/resources/**"])
-        if not " " in file
-    ] + [
-        "//bin",
-    ],
-    jvm_flags = [
-        "-Dspark.test.home=.",
-        "-Dio.netty.tryReflectionSetAccessible=true",
-    ],
-    resources = [
-        file
-        for file in glob(["src/test/resources/**"])
-        if not " " in file
-    ],
-    unused_dependency_checker_mode = "off",
-    runtime_deps = [
-        "@maven//:org_apache_avro_avro_mapred",
-        "@maven//:org_apache_derby_derby",
-        "@maven//:org_jodd_jodd_core",
-    ],
-    deps = [
-        ":hive",
-        ":test",
-        "//core",
-        "//core:test",
-        "//sql/catalyst",
-        "//sql/catalyst:test",
-        "//sql/core",
-        "//sql/core:test",
-        "@maven//:org_slf4j_slf4j_api",
-        "@maven//:org_scalacheck_scalacheck_" + scala_rje,
-        "//common/network-common",
-        "//common/tags:test",
-        "//launcher",
-        "//third_party:datanucleus",
-        "//third_party:hive",
-        "@com_google_protobuf//:protobuf_java",
-        "@maven//:com_esotericsoftware_kryo",
-        "@maven//:com_google_guava_guava",
-        "@maven//:com_jolbox_bonecp",
-        "@maven//:commons_io_commons_io",
-        "@maven//:io_dropwizard_metrics_metrics_core",
-        "@maven//:org_apache_commons_commons_lang3",
-        "@maven//:org_apache_hadoop_hadoop_common",
-        "@maven//:org_apache_hadoop_hadoop_mapreduce_client_core",
-        "@maven//:org_apache_orc_orc_core",
-        "@maven//:org_apache_parquet_parquet_column",
-        "@maven//:org_apache_parquet_parquet_common",
-        "@maven//:org_apache_parquet_parquet_hadoop",
-        "@maven//:org_apache_thrift_libthrift",
-        "@maven//:org_json4s_json4s_ast_" + scala_rje,
-        "@maven//:org_json4s_json4s_core_" + scala_rje,
-        "@maven//:org_json4s_json4s_jackson_" + scala_rje,
-        "@maven//:commons_codec_commons_codec",
-    ],
-) for src in glob(
-    [
-        "src/test/scala/**/*Suite.scala",
-        "src/test/scala/**/*Suites.scala",
-        "src/test/scala/**/*Benchmark.scala",
-        "src/test/scala/**/*Test.scala",
-    ],
-    exclude = [
-        "src/test/**/SQLQuerySuite.scala",
-        "src/test/**/HiveHadoopDelegationTokenManagerSuite.scala",
-        "src/test/**/HiveQuerySuite.scala",
-        "src/test/**/HiveDDLSuite.scala",
-        "src/test/**/HiveOrcSourceSuite.scala",
-        "src/test/scala/**/WindowQuerySuite.scala",
-        "src/test/scala/**/ScriptTransformationSuite.scala",
-        "src/test/scala/**/SQLMetricsSuite.scala",
-        "src/test/scala/**/PruningSuite.scala",
-        "src/test/scala/**/HiveUDFSuite.scala",
-        "src/test/scala/**/HiveTypeCoercionSuite.scala",
-        "src/test/scala/**/HiveTableScanSuite.scala",
-        "src/test/scala/**/HiveSerDeReadWriteSuite.scala",
-        "src/test/scala/**/HiveSerDeSuite.scala",
-        "src/test/scala/**/HiveResolutionSuite.scala",
-        "src/test/scala/**/HiveExplainSuite.scala",
-        "src/test/scala/**/HiveCommandSuite.scala",
-        "src/test/scala/**/VersionsSuite.scala",
-        "src/test/scala/**/UDFSuite.scala",
-        "src/test/scala/**/TestHiveSuite.scala",
-        "src/test/scala/**/MetastoreDataSourcesSuite.scala",
-        "src/test/scala/**/InsertSuite.scala",
-        "src/test/scala/**/HiveUserDefinedTypeSuite.scala",
-        "src/test/scala/**/HiveSparkSubmitSuite.scala",
-        "src/test/scala/**/CachedTableSuite.scala",
-        "src/test/scala/**/HiveSharedStateSuite.scala",
-        "src/test/scala/**/HiveParquetSuite.scala",
-        "src/test/scala/**/ErrorPositionSuite.scala",
-        "src/test/scala/**/HiveShowCreateTableSuite.scala",
-        # N.B.: relies on an old version of guava
-        "src/test/scala/**/HiveMetastoreCatalogSuite.scala",
-        "src/test/scala/**/StatisticsSuite.scala",
-        "src/test/scala/**/HiveExternalCatalogSuite.scala",
-    ],
-)]
+        exclude = [
+            "src/test/**/SQLQuerySuite.scala",
+            "src/test/**/HiveHadoopDelegationTokenManagerSuite.scala",
+            "src/test/**/HiveQuerySuite.scala",
+            "src/test/**/HiveDDLSuite.scala",
+            "src/test/**/HiveOrcSourceSuite.scala",
+            "src/test/scala/**/WindowQuerySuite.scala",
+            "src/test/scala/**/ScriptTransformationSuite.scala",
+            "src/test/scala/**/SQLMetricsSuite.scala",
+            "src/test/scala/**/PruningSuite.scala",
+            "src/test/scala/**/HiveUDFSuite.scala",
+            "src/test/scala/**/HiveTypeCoercionSuite.scala",
+            "src/test/scala/**/HiveTableScanSuite.scala",
+            "src/test/scala/**/HiveSerDeReadWriteSuite.scala",
+            "src/test/scala/**/HiveSerDeSuite.scala",
+            "src/test/scala/**/HiveResolutionSuite.scala",
+            "src/test/scala/**/HiveExplainSuite.scala",
+            "src/test/scala/**/HiveCommandSuite.scala",
+            "src/test/scala/**/VersionsSuite.scala",
+            "src/test/scala/**/UDFSuite.scala",
+            "src/test/scala/**/TestHiveSuite.scala",
+            "src/test/scala/**/MetastoreDataSourcesSuite.scala",
+            "src/test/scala/**/InsertSuite.scala",
+            "src/test/scala/**/HiveUserDefinedTypeSuite.scala",
+            "src/test/scala/**/HiveSparkSubmitSuite.scala",
+            "src/test/scala/**/CachedTableSuite.scala",
+            "src/test/scala/**/HiveSharedStateSuite.scala",
+            "src/test/scala/**/HiveParquetSuite.scala",
+            "src/test/scala/**/ErrorPositionSuite.scala",
+            "src/test/scala/**/HiveShowCreateTableSuite.scala",
+            # N.B.: relies on an old version of guava
+            "src/test/scala/**/HiveMetastoreCatalogSuite.scala",
+            "src/test/scala/**/StatisticsSuite.scala",
+            "src/test/scala/**/HiveExternalCatalogSuite.scala",
+        ],
+    )]
+    for _ in bazel_tests_enabled
+    if _
+]

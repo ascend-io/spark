@@ -67,113 +67,121 @@ java_binary(
     ],
 )
 
-scala_library(
-    name = "test",
-    srcs = glob(
-        [
-            "src/test/scala/**/*.scala",
-            "src/test/java/**/*.java",
+[
+    scala_library(
+        name = "test",
+        srcs = glob(
+            [
+                "src/test/scala/**/*.scala",
+                "src/test/java/**/*.java",
+            ],
+            exclude = [
+                "src/test/java/**/*Suite.java",
+                "src/test/java/**/*Test.java",
+                "src/test/java/**/*Benchmark.java",
+                "src/test/scala/**/*Suite.scala",
+                "src/test/scala/**/*Suites.scala",
+                "src/test/scala/**/*Test.scala",
+                "src/test/scala/**/*Benchmark.scala",
+            ],
+        ) + glob([
+            "src/test/**/HiveThriftServer2Suites.scala",
+        ]),
+        visibility = ["//visibility:public"],
+        deps = [
+            ":hive-thriftserver",
+            "//core",
+            "//core:test",
+            "//sql/catalyst",
+            "//sql/catalyst:test",
+            "//sql/core",
+            "//sql/core:test",
+            "//sql/hive",
+            "//sql/hive:test",
+            "@maven//:com_google_guava_guava",
+            "@maven//:org_apache_hadoop_hadoop_common",
+            "@maven//:org_apache_hive_hive_common",
+            "@maven//:org_apache_hive_hive_jdbc",
+            "@maven//:org_apache_hive_hive_service_rpc",
+            "@maven//:org_apache_thrift_libthrift",
+            "@maven//:org_scalatest_scalatest_" + scala_rje,
+            "@maven//:org_scalactic_scalactic_" + scala_rje,
+            "@maven//:org_slf4j_slf4j_api",
         ],
-        exclude = [
-            "src/test/java/**/*Suite.java",
-            "src/test/java/**/*Test.java",
-            "src/test/java/**/*Benchmark.java",
+    )
+    for _ in bazel_tests_enabled
+    if _
+]
+
+[
+    [scala_test(
+        name = src[:-6],
+        srcs = [
+            src,
+        ],
+        data = [
+            "//bin",
+            "//sbin",
+        ],
+        resources = glob([
+            "src/test/resources/**",
+        ]),
+        unused_dependency_checker_mode = "off",
+        runtime_deps = [
+            "@maven//:org_apache_avro_avro",
+        ],
+        deps = [
+            ":hive-thriftserver",
+            ":test",
+            "//common/kvstore",
+            "//common/unsafe",
+            "//core",
+            "//core:test",
+            "//launcher",
+            "//sql/catalyst",
+            "//sql/catalyst:test",
+            "//sql/core",
+            "//sql/core:test",
+            "//sql/hive",
+            "//sql/hive:test",
+            "@maven//:com_esotericsoftware_kryo",
+            "@maven//:com_google_guava_guava",
+            "@maven//:javax_servlet_javax_servlet_api",
+            "@maven//:log4j_log4j",
+            "@maven//:net_sourceforge_htmlunit_htmlunit",
+            "@maven//:org_apache_commons_commons_lang3",
+            "@maven//:org_apache_hadoop_hadoop_common",
+            "@maven//:org_apache_hive_hive_cli",
+            "@maven//:org_apache_hive_hive_common",
+            "@maven//:org_apache_hive_hive_exec_core",
+            "@maven//:org_apache_hive_hive_jdbc",
+            "@maven//:org_apache_hive_hive_serde",
+            "@maven//:org_apache_hive_hive_service_rpc",
+            "@maven//:org_apache_thrift_libthrift",
+            "@maven//:org_mockito_mockito_core",
+            "@maven//:org_seleniumhq_selenium_selenium_api",
+            "@maven//:org_seleniumhq_selenium_selenium_htmlunit_driver",
+            "@maven//:org_slf4j_slf4j_api",
+            "@maven//:org_w3c_css_sac",
+        ],
+    ) for src in glob(
+        [
             "src/test/scala/**/*Suite.scala",
             "src/test/scala/**/*Suites.scala",
-            "src/test/scala/**/*Test.scala",
             "src/test/scala/**/*Benchmark.scala",
+            "src/test/scala/**/*Test.scala",
         ],
-    ) + glob([
-        "src/test/**/HiveThriftServer2Suites.scala",
-    ]),
-    visibility = ["//visibility:public"],
-    deps = [
-        ":hive-thriftserver",
-        "//core",
-        "//core:test",
-        "//sql/catalyst",
-        "//sql/catalyst:test",
-        "//sql/core",
-        "//sql/core:test",
-        "//sql/hive",
-        "//sql/hive:test",
-        "@maven//:com_google_guava_guava",
-        "@maven//:org_apache_hadoop_hadoop_common",
-        "@maven//:org_apache_hive_hive_common",
-        "@maven//:org_apache_hive_hive_jdbc",
-        "@maven//:org_apache_hive_hive_service_rpc",
-        "@maven//:org_apache_thrift_libthrift",
-        "@maven//:org_scalatest_scalatest_" + scala_rje,
-        "@maven//:org_scalactic_scalactic_" + scala_rje,
-        "@maven//:org_slf4j_slf4j_api",
-    ],
-)
-
-[scala_test(
-    name = src[:-6],
-    srcs = [
-        src,
-    ],
-    data = [
-        "//bin",
-        "//sbin",
-    ],
-    resources = glob([
-        "src/test/resources/**",
-    ]),
-    unused_dependency_checker_mode = "off",
-    runtime_deps = [
-        "@maven//:org_apache_avro_avro",
-    ],
-    deps = [
-        ":hive-thriftserver",
-        ":test",
-        "//common/kvstore",
-        "//common/unsafe",
-        "//core",
-        "//core:test",
-        "//launcher",
-        "//sql/catalyst",
-        "//sql/catalyst:test",
-        "//sql/core",
-        "//sql/core:test",
-        "//sql/hive",
-        "//sql/hive:test",
-        "@maven//:com_esotericsoftware_kryo",
-        "@maven//:com_google_guava_guava",
-        "@maven//:javax_servlet_javax_servlet_api",
-        "@maven//:log4j_log4j",
-        "@maven//:net_sourceforge_htmlunit_htmlunit",
-        "@maven//:org_apache_commons_commons_lang3",
-        "@maven//:org_apache_hadoop_hadoop_common",
-        "@maven//:org_apache_hive_hive_cli",
-        "@maven//:org_apache_hive_hive_common",
-        "@maven//:org_apache_hive_hive_exec_core",
-        "@maven//:org_apache_hive_hive_jdbc",
-        "@maven//:org_apache_hive_hive_serde",
-        "@maven//:org_apache_hive_hive_service_rpc",
-        "@maven//:org_apache_thrift_libthrift",
-        "@maven//:org_mockito_mockito_core",
-        "@maven//:org_seleniumhq_selenium_selenium_api",
-        "@maven//:org_seleniumhq_selenium_selenium_htmlunit_driver",
-        "@maven//:org_slf4j_slf4j_api",
-        "@maven//:org_w3c_css_sac",
-    ],
-) for src in glob(
-    [
-        "src/test/scala/**/*Suite.scala",
-        "src/test/scala/**/*Suites.scala",
-        "src/test/scala/**/*Benchmark.scala",
-        "src/test/scala/**/*Test.scala",
-    ],
-    exclude = [
-        "src/test/scala/**/ThriftServerQueryTestSuit.scala",
-        "src/test/scala/**/SparkThriftServerProtocolVersionsSuite.scala",
-        "src/test/scala/**/SparkMetadataOperationSuite.scala",
-        "src/test/scala/**/JdbcConnectionUriSuite.scala",
-        "src/test/scala/**/HiveThriftServer2Suites.scala",
-        "src/test/scala/**/CliSuite.scala",
-        "src/test/scala/**/HiveTypeCoercionSuite.scala",
-        "src/test/scala/**/ThriftServerQueryTestSuite.scala",
-    ],
-)]
+        exclude = [
+            "src/test/scala/**/ThriftServerQueryTestSuit.scala",
+            "src/test/scala/**/SparkThriftServerProtocolVersionsSuite.scala",
+            "src/test/scala/**/SparkMetadataOperationSuite.scala",
+            "src/test/scala/**/JdbcConnectionUriSuite.scala",
+            "src/test/scala/**/HiveThriftServer2Suites.scala",
+            "src/test/scala/**/CliSuite.scala",
+            "src/test/scala/**/HiveTypeCoercionSuite.scala",
+            "src/test/scala/**/ThriftServerQueryTestSuite.scala",
+        ],
+    )]
+    for _ in bazel_tests_enabled
+    if _
+]

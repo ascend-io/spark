@@ -55,126 +55,138 @@ scala_library(
     ],
 )
 
-scala_library(
-    name = "test",
-    srcs = glob(
-        [
-            "src/test/**/*.scala",
-            "src/test/**/*.java",
+[
+    scala_library(
+        name = "test",
+        srcs = glob(
+            [
+                "src/test/**/*.scala",
+                "src/test/**/*.java",
+            ],
+            exclude = [
+                "src/test/**/*Suite.java",
+                "src/test/**/*Test.java",
+                "src/test/**/*Benchmark.java",
+                "src/test/**/*Suite.scala",
+                "src/test/**/*Test.scala",
+                "src/test/**/*Benchmark.scala",
+                "src/test/**/*Benchmark.scala",
+            ],
+        ) + glob([
+            "src/test/**/SessionCatalogSuite.scala",
+            "src/test/**/CreateTablePartitioningValidationSuite.scala",
+            "src/test/**/NestedColumnAliasingSuite.scala",
+            "src/test/**/SchemaPruningTest.scala",
+            "src/test/**/ScalaReflectionSuite.scala",
+            "src/test/**/PlanTest.scala",
+            "src/test/**/AnalysisTest.scala",
+            "src/test/**/AnalysisSuite.scala",
+            "src/test/**/EliminateSerializationSuite.scala",
+            "src/test/**/ExternalCatalogSuite.scala",
+            "src/test/**/RowEncoderSuite.scala",
+        ]),
+        visibility = ["//visibility:public"],
+        deps = [
+            ":catalyst",
+            "//common/unsafe",
+            "//core",
+            "//core:test",
+            "@maven//:com_esotericsoftware_kryo",
+            "@maven//:log4j_log4j",
+            "@maven//:org_apache_hadoop_hadoop_common",
+            "@maven//:org_scalatest_scalatest_" + scala_rje,
+            "@maven//:org_scalacheck_scalacheck_" + scala_rje,
+            "@maven//:org_scalactic_scalactic_" + scala_rje,
+            "@maven//:org_slf4j_slf4j_api",
         ],
-        exclude = [
+    )
+    for _ in bazel_tests_enabled
+    if _
+]
+
+[
+    [java_test(
+        name = src[:-5],
+        srcs = [
+            src,
+        ],
+        javacopts = [
+            "-Xep:TryFailThrowable:WARN",
+        ],
+        deps = [
+            ":catalyst",
+            ":test",
+            "//common/unsafe",
+            "//core",
+            "//core:test",
+            "@maven//:junit_junit",
+        ],
+    ) for src in glob(
+        [
             "src/test/**/*Suite.java",
             "src/test/**/*Test.java",
             "src/test/**/*Benchmark.java",
-            "src/test/**/*Suite.scala",
-            "src/test/**/*Test.scala",
-            "src/test/**/*Benchmark.scala",
-            "src/test/**/*Benchmark.scala",
         ],
-    ) + glob([
-        "src/test/**/SessionCatalogSuite.scala",
-        "src/test/**/CreateTablePartitioningValidationSuite.scala",
-        "src/test/**/NestedColumnAliasingSuite.scala",
-        "src/test/**/SchemaPruningTest.scala",
-        "src/test/**/ScalaReflectionSuite.scala",
-        "src/test/**/PlanTest.scala",
-        "src/test/**/AnalysisTest.scala",
-        "src/test/**/AnalysisSuite.scala",
-        "src/test/**/EliminateSerializationSuite.scala",
-        "src/test/**/ExternalCatalogSuite.scala",
-        "src/test/**/RowEncoderSuite.scala",
-    ]),
-    visibility = ["//visibility:public"],
-    deps = [
-        ":catalyst",
-        "//common/unsafe",
-        "//core",
-        "//core:test",
-        "@maven//:com_esotericsoftware_kryo",
-        "@maven//:log4j_log4j",
-        "@maven//:org_apache_hadoop_hadoop_common",
-        "@maven//:org_scalatest_scalatest_" + scala_rje,
-        "@maven//:org_scalacheck_scalacheck_" + scala_rje,
-        "@maven//:org_scalactic_scalactic_" + scala_rje,
-        "@maven//:org_slf4j_slf4j_api",
-    ],
-)
+        exclude = [
+            # SEGV, possibly related to java version
+            "src/test/**/RowBasedKeyValueBatchSuite.java",
+        ],
+    )]
+    for _ in bazel_tests_enabled
+    if _
+]
 
-[java_test(
-    name = src[:-5],
-    srcs = [
-        src,
-    ],
-    javacopts = [
-        "-Xep:TryFailThrowable:WARN",
-    ],
-    deps = [
-        ":catalyst",
-        ":test",
-        "//common/unsafe",
-        "//core",
-        "//core:test",
-        "@maven//:junit_junit",
-    ],
-) for src in glob(
-    [
-        "src/test/**/*Suite.java",
-        "src/test/**/*Test.java",
-        "src/test/**/*Benchmark.java",
-    ],
-    exclude = [
-        # SEGV, possibly related to java version
-        "src/test/**/RowBasedKeyValueBatchSuite.java",
-    ],
-)]
-
-[scala_test(
-    name = src[:-6],
-    srcs = [
-        src,
-    ],
-    data = [
-        "//bin",
-    ],
-    jvm_flags = [
-        "-Dspark.test.home=.",
-    ],
-    unused_dependency_checker_mode = "off",
-    deps = [
-        ":catalyst",
-        ":test",
-        "//common/sketch",
-        "//common/unsafe",
-        "//core",
-        "//core:test",
-        "@maven//:com_esotericsoftware_kryo",
-        "@maven//:com_fasterxml_jackson_core_jackson_core",
-        "@maven//:commons_io_commons_io",
-        "@maven//:io_dropwizard_metrics_metrics_core",
-        "@maven//:log4j_log4j",
-        "@maven//:org_antlr_antlr4_runtime",
-        "@maven//:org_apache_arrow_arrow_vector",
-        "@maven//:org_apache_commons_commons_lang3",
-        "@maven//:org_apache_hadoop_hadoop_common",
-        "@maven//:org_json4s_json4s_ast_" + scala_rje,
-        "@maven//:org_json4s_json4s_core_" + scala_rje,
-        "@maven//:org_json4s_json4s_jackson_" + scala_rje,
-        "@maven//:org_mockito_mockito_core",
-        "@maven//:org_scalacheck_scalacheck_" + scala_rje,
-        "@maven//:com_google_guava_guava",
-        "@maven//:commons_codec_commons_codec",
-        "@maven//:org_slf4j_slf4j_api",
-    ],
-) for src in glob(
-    [
-        "src/test/**/*Suite.scala",
-        "src/test/**/*Benchmark.scala",
-        "src/test/**/*Test.scala",
-    ],
-    exclude = [
-        # unknown failure
-        "src/test/**/MutableProjectionSuite.scala",
-        # wants to use ".." to reference files (probably)
-        "src/test/**/BufferHolderSparkSubmitSuite.scala",
-    ],
-)]
+[
+    [scala_test(
+        name = src[:-6],
+        srcs = [
+            src,
+        ],
+        data = [
+            "//bin",
+        ],
+        jvm_flags = [
+            "-Dspark.test.home=.",
+        ],
+        unused_dependency_checker_mode = "off",
+        deps = [
+            ":catalyst",
+            ":test",
+            "//common/sketch",
+            "//common/unsafe",
+            "//core",
+            "//core:test",
+            "@maven//:com_esotericsoftware_kryo",
+            "@maven//:com_fasterxml_jackson_core_jackson_core",
+            "@maven//:commons_io_commons_io",
+            "@maven//:io_dropwizard_metrics_metrics_core",
+            "@maven//:log4j_log4j",
+            "@maven//:org_antlr_antlr4_runtime",
+            "@maven//:org_apache_arrow_arrow_vector",
+            "@maven//:org_apache_commons_commons_lang3",
+            "@maven//:org_apache_hadoop_hadoop_common",
+            "@maven//:org_json4s_json4s_ast_" + scala_rje,
+            "@maven//:org_json4s_json4s_core_" + scala_rje,
+            "@maven//:org_json4s_json4s_jackson_" + scala_rje,
+            "@maven//:org_mockito_mockito_core",
+            "@maven//:org_scalacheck_scalacheck_" + scala_rje,
+            "@maven//:com_google_guava_guava",
+            "@maven//:commons_codec_commons_codec",
+            "@maven//:org_slf4j_slf4j_api",
+        ],
+    ) for src in glob(
+        [
+            "src/test/**/*Suite.scala",
+            "src/test/**/*Benchmark.scala",
+            "src/test/**/*Test.scala",
+        ],
+        exclude = [
+            # unknown failure
+            "src/test/**/MutableProjectionSuite.scala",
+            # wants to use ".." to reference files (probably)
+            "src/test/**/BufferHolderSparkSubmitSuite.scala",
+        ],
+    )]
+    for _ in bazel_tests_enabled
+    if _
+]

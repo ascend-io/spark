@@ -7,16 +7,20 @@ scala_library(
     visibility = ["//visibility:public"],
 )
 
-[scala_test(
-    name = src[:-6],
-    srcs = [
-        src,
-    ],
-    deps = [
-        ":sketch",
-    ],
-) for src in glob(
-    [
-        "src/test/**/*Suite.scala",
-    ],
-)]
+[
+    [scala_test(
+        name = src[:-6],
+        srcs = [
+            src,
+        ],
+        deps = [
+            ":sketch",
+        ],
+    ) for src in glob(
+        [
+            "src/test/**/*Suite.scala",
+        ],
+    )]
+    for _ in bazel_tests_enabled
+    if _
+]
