@@ -104,7 +104,7 @@ genrule(
     name = "spark-version-info",
     srcs = ["//build:spark-build-info-bazel.sh"],
     outs = ["spark-version-info.properties"],
-    cmd = "cat  bazel-out/volatile-status.txt bazel-out/stable-status.txt | $(location //build:spark-build-info-bazel.sh) > $@",
+    cmd = "cat bazel-out/volatile-status.txt bazel-out/stable-status.txt | $(location //build:spark-build-info-bazel.sh) > $@",
     stamp = True,
 )
 

@@ -1,13 +1,14 @@
-#!/bin/sh
+#!/bin/bash
 # requires perl xpath
 set -e
 echo STABLE_spark_user $USER
+SPARK=$(dirname $BASH_SOURCE)/..
 echo STABLE_spark_version $( \
-  cat pom.xml | xpath -e '//project/version/text()' 2> /dev/null || \
-  cat pom.xml | xpath '//project/version/text()' 2> /dev/null
+  cat $SPARK/pom.xml | xpath -e '//project/version/text()' 2> /dev/null || \
+  cat $SPARK/pom.xml | xpath '//project/version/text()' 2> /dev/null
 )
-echo STABLE_spark_branch $(git rev-parse --abbrev-ref HEAD)
-echo STABLE_spark_url $(git config --get remote.origin.url)
-echo spark_revision $(git rev-parse HEAD)
+echo STABLE_spark_branch $(cd $SPARK && git rev-parse --abbrev-ref HEAD)
+echo STABLE_spark_url $(cd $SPARK && git config --get remote.origin.url)
+echo spark_revision $(cd $SPARK && git rev-parse HEAD)
 echo spark_date $(date -u +%Y-%m-%dT%H:%M:%SZ)
 exit 0
