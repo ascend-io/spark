@@ -3,8 +3,23 @@ load(":lib.bzl", "zip")
 zip(
     name = "pyspark",
     srcs = [
-        "//python/pyspark",
+        "//python/pyspark:files",
     ],
     strip_prefix = "python/",
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "files",
+    srcs = glob(
+        [
+            "**",
+        ],
+        exclude = [
+            "**/BUILD.bazel",
+            "**/*.bzl",
+            "**/*~",
+        ],
+    ),
     visibility = ["//visibility:public"],
 )

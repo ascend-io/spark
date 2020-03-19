@@ -1,5 +1,5 @@
 filegroup(
-    name = "pyspark",
+    name = "files",
     srcs = glob([
         "**/*.py",
     ]),

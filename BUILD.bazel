@@ -4,10 +4,10 @@ filegroup(
         "//bin",
         "//sbin",
         "//python/lib:pyspark.zip",
+        "//python/lib:files",
+        "//python/pyspark:files",
     ] + glob([
         "resource-managers/kubernetes/docker/src/main/dockerfiles/spark/entrypoint.sh",
-        "python/lib/**",
-        "python/pyspark/**",
     ]),
     visibility = ["//visibility:public"],
 )
