@@ -1,12 +1,14 @@
 #!/bin/bash
 # requires perl xpath
 set -e
+set -o pipefail
 echo STABLE_spark_user $USER
 SPARK=$(dirname $BASH_SOURCE)/..
-echo STABLE_spark_version $( \
-  cat $SPARK/pom.xml | xpath -e '//project/version/text()' 2> /dev/null || \
-  cat $SPARK/pom.xml | xpath '//project/version/text()' 2> /dev/null
+SPARK_VERSION=$( \
+  (cat $SPARK/pom.xml | xpath -e '//project/version/text()' 2> /dev/null) || \
+  (cat $SPARK/pom.xml | xpath '//project/version/text()' 2> /dev/null)
 )
+echo STABLE_spark_version $SPARK_VERSION
 echo STABLE_spark_branch $(cd $SPARK && git rev-parse --abbrev-ref HEAD)
 echo STABLE_spark_url $(cd $SPARK && git config --get remote.origin.url)
 echo spark_revision $(cd $SPARK && git rev-parse HEAD)
