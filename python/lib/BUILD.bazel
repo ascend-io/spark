@@ -1,0 +1,9 @@
+load(":lib.bzl", "zip")
+
+zip(
+    name = "pyspark",
+    srcs = [
+        "//python/pyspark",
+    ],
+    strip_prefix = "python/",
+)

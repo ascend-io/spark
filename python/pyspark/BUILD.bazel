@@ -1,0 +1,7 @@
+filegroup(
+    name = "pyspark",
+    srcs = glob([
+        "**/*.py",
+    ]),
+    visibility = ["//visibility:public"],
+)
