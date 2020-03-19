@@ -1,8 +1,11 @@
 #!/bin/sh
-# requires xidel to parse the pom file ... should probably come up with a better way ...
+# requires perl xpath
 set -e
 echo STABLE_spark_user $USER
-echo STABLE_spark_version $(xidel -s pom.xml --extract "//project/version")
+echo STABLE_spark_version $( \
+  cat pom.xml | xpath -e '//project/version/text()' 2> /dev/null || \
+  cat pom.xml | xpath '//project/version/text()' 2> /dev/null
+)
 echo STABLE_spark_branch $(git rev-parse --abbrev-ref HEAD)
 echo STABLE_spark_url $(git config --get remote.origin.url)
 echo spark_revision $(git rev-parse HEAD)
