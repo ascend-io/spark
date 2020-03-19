@@ -5,7 +5,10 @@ zip(
     srcs = [
         "//python/pyspark:files",
     ],
-    strip_prefix = "python/",
+    strip_prefixes = [
+        "external/spark/",
+        "python/",
+    ],
     visibility = ["//visibility:public"],
 )
 
