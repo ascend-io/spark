@@ -6,4 +6,5 @@ zip(
         "//python/pyspark",
     ],
     strip_prefix = "python/",
+    visibility = ["//visibility:public"],
 )
