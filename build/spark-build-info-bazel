@@ -21,6 +21,6 @@ while read line
 do
     changed=$(echo "$line" | sed 's/.*spark_\(.*\)/\1/')
     if [ "$changed" != "$line" ]; then
-        echo $changed
+        echo $changed | tr ' ' '='
     fi
 done
