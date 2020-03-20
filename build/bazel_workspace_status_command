@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # requires perl xpath
 set -e
 set -x
@@ -14,4 +14,5 @@ echo STABLE_spark_branch $(cd $SPARK && git rev-parse --abbrev-ref HEAD)
 echo STABLE_spark_url $(cd $SPARK && git config --get remote.origin.url)
 echo spark_revision $(cd $SPARK && git rev-parse HEAD)
 echo spark_date $(date -u +%Y-%m-%dT%H:%M:%SZ)
+echo spark_PWD $(pwd)
 exit 0
