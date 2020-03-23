@@ -117,6 +117,10 @@ private object DateTimeFormatterHelper {
       pattern: String): DateTimeFormatterBuilder = {
     val builder = createBuilder()
     pattern.split("'").zipWithIndex.foreach {
+      // Split string starting with the regex itself which is `'` here will produce an extra empty
+      // string at res(0). So when the first element here is empty string we do not need append `'`
+      // literal to the DateTimeFormatterBuilder.
+      case ("", idx) if idx != 0 => builder.appendLiteral("'")
       case (pattenPart, idx) if idx % 2 == 0 =>
         var rest = pattenPart
         while (rest.nonEmpty) {
@@ -158,6 +162,8 @@ private object DateTimeFormatterHelper {
     toFormatter(builder, TimestampFormatter.defaultLocale)
   }
 
+  final val unsupportedLetters = Set('A', 'c', 'e', 'n', 'N', 'p')
+
   /**
    * In Spark 3.0, we switch to the Proleptic Gregorian calendar and use DateTimeFormatter for
    * parsing/formatting datetime values. The pattern string is incompatible with the one defined
@@ -175,7 +181,7 @@ private object DateTimeFormatterHelper {
     (pattern + " ").split("'").zipWithIndex.map {
       case (patternPart, index) =>
         if (index % 2 == 0) {
-          for (c <- patternPart if c == 'c' || c == 'e') {
+          for (c <- patternPart if unsupportedLetters.contains(c)) {
             throw new IllegalArgumentException(s"Illegal pattern character: $c")
           }
           // The meaning of 'u' was day number of week in SimpleDateFormat, it was changed to year
