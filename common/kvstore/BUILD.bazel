@@ -42,9 +42,6 @@ scala_library(
             src,
         ],
         resources = glob(["src/test/resources/**"]),
-        runtime_deps = [
-            # "@maven//:ch_qos_logback_logback_classic",
-        ],
         deps = [
             ":kvstore",
             ":test",
