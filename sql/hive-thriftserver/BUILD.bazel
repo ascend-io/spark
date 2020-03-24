@@ -74,13 +74,16 @@ java_binary(
     ],
 )
 
-# to run: bazel build //sql/hive:beeline && bazel-bin/sql/hive/beeline --verbose=true
+# to run: bazel  //sql/hive:beeline && bazel-bin/sql/hive/beeline --verbose=true
+# hive-thriftserver library has some hive classes defined, e.g., org/apache/hive/service/cli/HiveSQLException
+# needed by beelin
 
 scala_binary(
     name = "beeline",
     jvm_flags = ["-Xmx1g"],
     main_class = "org.apache.hive.beeline.BeeLine",
     runtime_deps = [
+        ":hive-thriftserver",
         "@maven//:org_apache_hive_hive_beeline",
     ],
 )
