@@ -253,6 +253,7 @@ artifacts = [
 ]
 
 excluded_artifacts = [
+    "ch.qos.logback:logback-classic",
     "com.sun.jersey:jersey-client",
     "com.sun.jersey:jersey-core",
     "com.sun.jersey:jersey-json",
