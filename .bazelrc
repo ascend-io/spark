@@ -1,8 +1,6 @@
-build --remote_cache=http://localhost:9090
 build --strategy=Scalac=worker
 build --worker_sandboxing
 build --workspace_status_command=build/bazel_workspace_status_command
-test --remote_cache=http://localhost:9090
 test --spawn_strategy=local
 test --test_env SPARK_HOME=.
 test --test_env SPARK_SCALA_VERSION=2.12
