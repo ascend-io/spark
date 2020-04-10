@@ -34,19 +34,6 @@ scala_library(
     ],
 )
 
-# to run: bazel build //sql/hive:beeline && bazel-bin/sql/hive/beeline --verbose=true
-# N.B.: this relies on hive-thriftserver which is a bit strange.
-
-# scala_binary(
-#     name = "beeline",
-#     jvm_flags = ["-Xmx1g"],
-#     main_class = "org.apache.hive.beeline.BeeLine",
-#     runtime_deps = [
-#         "//sql/hive-thriftserver:library",
-#         "@maven//:org_apache_hive_hive_beeline",
-#     ],
-# )
-
 [
     scala_library(
         name = "test",

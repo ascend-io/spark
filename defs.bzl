@@ -79,7 +79,6 @@ versions = {
     "leveldbjni-all": "1.8",
     "libthrift": "0.9.3",
     "log4j": "1.2.17",
-    "logback-classic": "1.2.3",
     "lz4-java": "1.7.0",
     "mockito-1-10": "3.1.0.0",
     "mockito-core": "3.2.4",
@@ -110,7 +109,6 @@ versions = {
 }
 
 artifacts = [
-    "ch.qos.logback:logback-classic",
     "com.clearspring.analytics:stream:{clearspring}",
     "com.esotericsoftware:kryo",
     "com.fasterxml.jackson.core:jackson-annotations:{jackson}",
@@ -255,6 +253,7 @@ artifacts = [
 ]
 
 excluded_artifacts = [
+    "ch.qos.logback:logback-classic",
     "com.sun.jersey:jersey-client",
     "com.sun.jersey:jersey-core",
     "com.sun.jersey:jersey-json",

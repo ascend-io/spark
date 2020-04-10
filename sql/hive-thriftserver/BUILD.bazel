@@ -50,13 +50,20 @@ scala_library(
     ],
 )
 
-# to run: bazel build //sql/hive-thriftserver:server && ./bazel-bin/sql/hive-thriftserver/server --class org.apache.spark.sql.hive.thriftserver.HiveThriftServer2 --name 'Thrift JDBC/ODBC Server' --master local spark-internal
-
-# N.B.: at this point, a fat/deploy jar won't work for this: the datanucleus stuff has "plugin.xml" resources that all
-# have the same name to if you create the typical fat jar that just does a merge, it fails to bootstrap
+# N.B.: a fat/deploy jar won't work for this: the datanucleus stuff has "plugin.xml" resources that all
+# have the same name so if you create the typical fat jar that just does a merge, the result fails to bootstrap.
 
 java_binary(
     name = "server",
+    args = [
+        "--class",
+        "org.apache.spark.sql.hive.thriftserver.HiveThriftServer2",
+        "--name",
+        "'Thrift JDBC/ODBC Server'",
+        "--master",
+        "local",
+        "spark-internal",
+    ],
     data = glob(["test-files/**"]),
     jvm_flags = [
         "-Xmx1g",
@@ -64,6 +71,20 @@ java_binary(
     main_class = "org.apache.spark.deploy.SparkSubmit",
     runtime_deps = [
         ":hive-thriftserver",
+    ],
+)
+
+# to run: bazel  //sql/hive:beeline && bazel-bin/sql/hive/beeline --verbose=true
+# hive-thriftserver library has some hive classes defined, e.g., org/apache/hive/service/cli/HiveSQLException
+# needed by beelin
+
+scala_binary(
+    name = "beeline",
+    jvm_flags = ["-Xmx1g"],
+    main_class = "org.apache.hive.beeline.BeeLine",
+    runtime_deps = [
+        ":hive-thriftserver",
+        "@maven//:org_apache_hive_hive_beeline",
     ],
 )
 
