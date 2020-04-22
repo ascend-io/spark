@@ -21,10 +21,10 @@ scala_library(
     ]) + [
         ":parser",
     ],
-    visibility = ["//visibility:public"],
     resources = glob([
         "src/main/resources/**",
     ]),
+    visibility = ["//visibility:public"],
     deps = [
         "//common/network-common",
         "//common/sketch",
