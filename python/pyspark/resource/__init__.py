@@ -1,5 +1,3 @@
-#!/bin/bash
-
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -17,21 +15,15 @@
 # limitations under the License.
 #
 
-# This scripts packages the SparkR source files (R and C files) and
-# creates a package that can be loaded in R. The package is by default installed to
-# $FWDIR/lib and the package can be loaded by using the following command in R:
-#
-#   library(SparkR, lib.loc="$FWDIR/lib")
-#
-# NOTE(shivaram): Right now we use $SPARK_HOME/R/lib to be the installation directory
-# to load the SparkR package on the worker nodes.
+"""
+APIs to let users manipulate resource requirements.
+"""
+from pyspark.resource.executorrequests import ExecutorResourceRequest, ExecutorResourceRequests
+from pyspark.resource.taskrequests import TaskResourceRequest, TaskResourceRequests
+from pyspark.resource.resourceprofilebuilder import ResourceProfileBuilder
+from pyspark.resource.resourceprofile import ResourceProfile
 
-set -o pipefail
-set -e
-
-FWDIR="$(cd "`dirname "${BASH_SOURCE[0]}"`"; pwd)"
-pushd "$FWDIR" > /dev/null
-. "$FWDIR/find-r.sh"
-
-# Generate Rd files if devtools is installed
-"$R_SCRIPT_PATH/Rscript" -e ' if("devtools" %in% rownames(installed.packages())) { library(devtools); setwd("'$FWDIR'"); devtools::document(pkg="./pkg", roclets=c("rd")) }'
+__all__ = [
+    "TaskResourceRequest", "TaskResourceRequests", "ExecutorResourceRequest",
+    "ExecutorResourceRequests", "ResourceProfile", "ResourceProfileBuilder",
+]

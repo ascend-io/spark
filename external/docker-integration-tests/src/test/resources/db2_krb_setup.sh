@@ -1,6 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -17,21 +16,13 @@
 # limitations under the License.
 #
 
-# This scripts packages the SparkR source files (R and C files) and
-# creates a package that can be loaded in R. The package is by default installed to
-# $FWDIR/lib and the package can be loaded by using the following command in R:
-#
-#   library(SparkR, lib.loc="$FWDIR/lib")
-#
-# NOTE(shivaram): Right now we use $SPARK_HOME/R/lib to be the installation directory
-# to load the SparkR package on the worker nodes.
+USERPROFILE=/database/config/db2inst1/sqllib/userprofile
+echo "export DB2_KRB5_PRINCIPAL=db2/__IP_ADDRESS_REPLACE_ME__@EXAMPLE.COM" >> $USERPROFILE
+echo "export KRB5_KTNAME=/var/custom/db2.keytab" >> $USERPROFILE
+# This trick is needed because DB2 forwards environment variables automatically only if it's starting with DB2.
+su - db2inst1 -c "db2set DB2ENVLIST=KRB5_KTNAME"
 
-set -o pipefail
-set -e
+su - db2inst1 -c "db2 UPDATE DBM CFG USING SRVCON_GSSPLUGIN_LIST IBMkrb5 IMMEDIATE"
+su - db2inst1 -c "db2 UPDATE DBM CFG USING SRVCON_AUTH KERBEROS IMMEDIATE"
 
-FWDIR="$(cd "`dirname "${BASH_SOURCE[0]}"`"; pwd)"
-pushd "$FWDIR" > /dev/null
-. "$FWDIR/find-r.sh"
-
-# Generate Rd files if devtools is installed
-"$R_SCRIPT_PATH/Rscript" -e ' if("devtools" %in% rownames(installed.packages())) { library(devtools); setwd("'$FWDIR'"); devtools::document(pkg="./pkg", roclets=c("rd")) }'
+su - db2inst1 -c "db2stop force; db2start"
