@@ -99,3 +99,6 @@ spark-warehouse/
 
 # For SBT
 .jvmopts
+
+# Ephemeral bazel files
+/bazel-*
