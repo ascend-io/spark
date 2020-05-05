@@ -18,7 +18,7 @@ def version_artifacts(artifacts):
 bazel_tests_enabled = [False]
 
 scala = "2.12"
-scala_minor = "10"
+scala_minor = "11"
 scala_rje = "2_12"
 hive = "2.3"
 
@@ -99,7 +99,7 @@ versions = {
     "scala": scala,
     "scala-parser-combinators": "1.1.2",
     "scala-xml": "1.2.0",
-    "scala_minor": "10",
+    "scala_minor": "11",
     "scalacheck": "1.14.3",
     "scalatest": "3.0.8",
     "selenium": "2.52.0",
@@ -301,8 +301,8 @@ scala_extra_jars = {scala: {
 scala_version_shas = (
     version_string("{scala}.{scala_minor}"),
     {
-        "scala_compiler": "cedc3b9c39d215a9a3ffc0cc75a1d784b51e9edc7f13051a1b4ad5ae22cfbc0c",
-        "scala_library": "0a57044d10895f8d3dd66ad4286891f607169d948845ac51e17b4c1cf0ab569d",
-        "scala_reflect": "56b609e1bab9144fb51525bfa01ccd72028154fc40a58685a1e9adcbe7835730",
+        "scala_compiler": "e901937dbeeae1715b231a7cfcd547a10d5bbf0dfb9d52d2886eae18b4d62ab6",
+        "scala_library": "dbfe77a3fc7a16c0c7cb6cb2b91fecec5438f2803112a744cb1b187926a138be",
+        "scala_reflect": "5f9e156aeba45ef2c4d24b303405db259082739015190b3b334811843bd90d6a",
     },
 )
