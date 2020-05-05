@@ -1,0 +1,50 @@
+load("//:defs.bzl", "scala_rje")
+
+scala_library(
+    name = "mllib",
+    srcs = glob([
+        "src/main/scala/**/*.scala",
+    ]),
+    # javacopts = [
+    #     "-Xep:GuardedBy:WARN",
+    # ],
+    # resource_jars = [
+    #     ":version",
+    # ],
+    # resources = glob([
+    #     "src/main/resources/**",
+    # ]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//common/tags",
+        "//common/unsafe",
+        "//core",
+        "//graphx",
+        "//mllib-local",
+        "//sql/catalyst",
+        "//sql/core",
+        "//streaming",
+        "@maven//:com_chuusai_shapeless_" + scala_rje,
+        "@maven//:com_clearspring_analytics_stream",
+        "@maven//:com_esotericsoftware_kryo",
+        "@maven//:com_fasterxml_jackson_core_jackson_annotations",
+        "@maven//:com_github_fommil_netlib_all",
+        "@maven//:com_github_wendykierp_JTransforms",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_twitter_chill_" + scala_rje,
+        "@maven//:commons_io_commons_io",
+        "@maven//:net_razorvine_pyrolite",
+        "@maven//:org_apache_commons_commons_lang3",
+        "@maven//:org_apache_commons_commons_math3",
+        "@maven//:org_apache_hadoop_hadoop_common",
+        "@maven//:org_apache_hadoop_hadoop_mapreduce_client_core",
+        "@maven//:org_jpmml_pmml_model",
+        "@maven//:org_json4s_json4s_ast_" + scala_rje,
+        "@maven//:org_json4s_json4s_core_" + scala_rje,
+        "@maven//:org_json4s_json4s_jackson_" + scala_rje,
+        "@maven//:org_scala_lang_modules_scala_parser_combinators_" + scala_rje,
+        "@maven//:org_scala_lang_modules_scala_xml_" + scala_rje,
+        "@maven//:org_scalanlp_breeze_" + scala_rje,
+        "@maven//:org_slf4j_slf4j_api",
+    ],
+)

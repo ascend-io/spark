@@ -1,0 +1,14 @@
+load("//:defs.bzl", "scala_rje")
+
+scala_library(
+    name = "mllib-local",
+    srcs = glob([
+        "src/main/scala/**/*.scala",
+    ]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//common/tags",
+        "@maven//:com_github_fommil_netlib_all",
+        "@maven//:org_scalanlp_breeze_" + scala_rje,
+    ],
+)

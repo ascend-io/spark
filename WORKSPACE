@@ -84,6 +84,8 @@ maven_install(
     version_conflict_policy = "pinned",
 )
 
+# bazel run @unpinned_maven//:pin
+
 load("@maven//:defs.bzl", "pinned_maven_install")
 
 pinned_maven_install()

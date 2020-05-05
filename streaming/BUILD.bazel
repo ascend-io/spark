@@ -1,0 +1,26 @@
+load("//:defs.bzl", "scala_rje")
+
+scala_library(
+    name = "streaming",
+    srcs = glob([
+        "src/main/java/**/*.java",
+        "src/main/scala/**/*.scala",
+    ]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//common/network-common",
+        "//common/tags",
+        "//core",
+        "@maven//:com_esotericsoftware_kryo",
+        "@maven//:com_google_guava_guava",
+        "@maven//:io_dropwizard_metrics_metrics_core",
+        "@maven//:javax_servlet_javax_servlet_api",
+        "@maven//:javax_ws_rs_javax_ws_rs_api",
+        "@maven//:net_sf_py4j_py4j",
+        "@maven//:org_apache_commons_commons_text",
+        "@maven//:org_apache_hadoop_hadoop_common",
+        "@maven//:org_apache_hadoop_hadoop_mapreduce_client_core",
+        "@maven//:org_scala_lang_modules_scala_xml_" + scala_rje,
+        "@maven//:org_slf4j_slf4j_api",
+    ],
+)
