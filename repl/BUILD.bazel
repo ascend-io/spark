@@ -1,10 +1,7 @@
 scala_library(
-    name = "repl",
+    name = "library",
     srcs = glob([
         "src/main/scala/**/*.scala",
-    ]),
-    resources = glob([
-        "src/main/resources/**",
     ]),
     visibility = ["//visibility:public"],
     deps = [
@@ -15,6 +12,27 @@ scala_library(
         "@maven//:org_apache_hadoop_hadoop_common",
         "@maven//:org_apache_xbean_xbean_asm7_shaded",
         "@maven//:org_slf4j_slf4j_api",
+    ],
+)
+
+java_binary(
+    name = "repl",
+    visibility = ["//visibility:public"],
+    main_class = "org.apache.spark.deploy.SparkSubmit",
+    runtime_deps = [
+        ":library",
+    ],
+    jvm_flags = [
+        "--add-exports java.base/jdk.internal.misc=ALL-UNNAMED",
+        "-Dio.netty.tryReflectionSetAccessible=true",
+        "-Dscala.usejavacp=true"
+    ],
+    args = [
+        "--master",
+        "local",
+        "--class",
+        "org.apache.spark.repl.Main",
+        "spark-internal",
     ],
 )
 
