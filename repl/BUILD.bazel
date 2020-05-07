@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_binary")
+
 scala_library(
     name = "library",
     srcs = glob([
@@ -17,22 +19,22 @@ scala_library(
 
 java_binary(
     name = "repl",
-    visibility = ["//visibility:public"],
-    main_class = "org.apache.spark.deploy.SparkSubmit",
-    runtime_deps = [
-        ":library",
-    ],
-    jvm_flags = [
-        "--add-exports java.base/jdk.internal.misc=ALL-UNNAMED",
-        "-Dio.netty.tryReflectionSetAccessible=true",
-        "-Dscala.usejavacp=true"
-    ],
     args = [
         "--master",
         "local",
         "--class",
         "org.apache.spark.repl.Main",
         "spark-internal",
+    ],
+    jvm_flags = [
+        "--add-exports java.base/jdk.internal.misc=ALL-UNNAMED",
+        "-Dio.netty.tryReflectionSetAccessible=true",
+        "-Dscala.usejavacp=true",
+    ],
+    main_class = "org.apache.spark.deploy.SparkSubmit",
+    visibility = ["//visibility:public"],
+    runtime_deps = [
+        ":library",
     ],
 )
 
