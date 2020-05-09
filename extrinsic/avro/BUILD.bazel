@@ -1,0 +1,21 @@
+scala_library(
+    name = "avro",
+    srcs = glob([
+        "src/main/java/**/*.java",
+        "src/main/scala/**/*.scala",
+    ]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//common/tags",
+        "//common/unsafe",
+        "//core",
+        "//sql/catalyst",
+        "//sql/core",
+        "@maven//:com_esotericsoftware_kryo",
+        "@maven//:org_apache_avro_avro",
+        "@maven//:org_apache_avro_avro_mapred",
+        "@maven//:org_apache_hadoop_hadoop_common",
+        "@maven//:org_apache_hadoop_hadoop_mapreduce_client_core",
+        "@maven//:org_slf4j_slf4j_api",
+    ],
+)
