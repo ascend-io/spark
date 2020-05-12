@@ -4,6 +4,9 @@ scala_library(
         "src/main/java/**/*.java",
         "src/main/scala/**/*.scala",
     ]),
+    resources = glob([
+        "src/main/resources/**",
+    ]),
     visibility = ["//visibility:public"],
     deps = [
         "//common/tags",
