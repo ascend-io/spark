@@ -7,6 +7,9 @@ scala_library(
     resources = glob([
         "src/main/resources/**",
     ]),
+    tags = [
+        "maven_coordinates=org.apache.spark:spark-avro_" + scala_rje + ":" + spark_version,
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "//common/tags",

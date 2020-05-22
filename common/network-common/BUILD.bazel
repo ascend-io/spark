@@ -6,6 +6,9 @@ scala_library(
         "src/main/**/*.java",
         "src/main/**/*.scala",
     ]),
+    tags = [
+        "maven_coordinates=org.apache.spark:spark-network-common_" + scala_rje + ":" + spark_version,
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "@maven//:com_fasterxml_jackson_core_jackson_annotations",

@@ -5,6 +5,9 @@ scala_library(
     srcs = glob([
         "src/main/scala/**/*.scala",
     ]),
+    tags = [
+        "maven_coordinates=org.apache.spark:spark-repl_" + scala_rje + ":" + spark_version,
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "//core",

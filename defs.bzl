@@ -22,6 +22,11 @@ scala_minor = "11"
 scala_rje = "2_12"
 hive = "2.3"
 
+# This is a workaround for now: we should be getting this from the pom
+# file via stamping. That's a little complicated and we don't have the
+# time, so duplicating it here.
+spark_version = "3.1.0-SNAPSHOT"
+
 versions = {
     "JTransforms": "3.1",
     "RoaringBitmap": "0.8.12",

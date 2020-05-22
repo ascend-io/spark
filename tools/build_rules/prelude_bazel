@@ -7,4 +7,4 @@ load(
     "scala_test",
 )
 
-load("//:defs.bzl", "bazel_tests_enabled")
+load("//:defs.bzl", "bazel_tests_enabled", "scala_rje", "spark_version")

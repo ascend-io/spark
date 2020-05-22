@@ -6,6 +6,9 @@ scala_library(
     resources = glob([
         "src/main/resources/**",
     ]),
+    tags = [
+        "maven_coordinates=org.apache.spark:spark-kubernetes_" + scala_rje + ":" + spark_version,
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "//common/network-common",

@@ -4,8 +4,13 @@ scala_library(
         "src/main/**/*.scala",
         "src/main/**/*.java",
     ]),
+    tags = [
+        "maven_coordinates=org.apache.spark:spark-tags_" + scala_rje + ":" + spark_version,
+    ],
     visibility = ["//visibility:public"],
 )
+
+# these are not actually tests but instead tags/annotations used in tests
 
 scala_library(
     name = "test",

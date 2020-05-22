@@ -9,6 +9,9 @@ scala_library(
         "v%s/src/main/scala/**/*.scala" % hive,
         "v%s/src/main/java/**/*.java" % hive,
     ]),
+    tags = [
+        "maven_coordinates=org.apache.spark:spark-hive-thriftserver_" + scala_rje + ":" + spark_version,
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "//common/kvstore",
