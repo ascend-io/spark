@@ -31,7 +31,7 @@ versions = {
     "JTransforms": "3.1",
     "RoaringBitmap": "0.8.12",
     "antlr4-runtime": "4.7.2",
-    "arrow": "0.15.1",
+    "arrow": "0.17.1",
     "avro": "1.9.1",
     "bonecp": "0.8.0.RELEASE",
     "breeze": "1.0",
