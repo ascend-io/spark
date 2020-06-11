@@ -62,13 +62,13 @@ versions = {
     "hadoop": "3.2.1",
     "hadoop-mapred": "0.22.0",
     "hamcrest": "2.2",
-    "hive": "%s.6" % hive,
+    "hive": "%s.7" % hive,
     "hive-storage-api": "2.7.1",
     "htmlunit": "2.22",
     "httpcore": "4.4.10",
     "ivy": "2.5.0",
     "jackson": "2.10.3",
-    "janino": "3.0.15",
+    "janino": "3.1.2",
     "javax-servlet-api": "4.0.1",
     "javax-ws-rs-api": "2.0.1",
     "jaxb-api": "2.2.11",
@@ -93,7 +93,7 @@ versions = {
     "netlib": "1.1.2",
     "netty": "4.1.50.Final",
     "okhttp": "3.12.10",
-    "orc": "1.5.9",
+    "orc": "1.5.10",
     "oro": "2.0.8",
     "parquet": "1.10.1",
     "pmml-model": "1.5.1",
@@ -111,11 +111,11 @@ versions = {
     "selenium-api": "2.52.0",
     "shapeless": "2.3.3",
     "slf4j": "1.7.30",
-    "snappy-java": "1.1.7.3",
+    "snappy-java": "1.1.7.5",
     "univocity-parsers": "2.8.4",
     "xbean-asm7-shaded": "4.15",
     "zookeeper": "3.4.14",
-    "zstd-jni": "1.4.4-3",
+    "zstd-jni": "1.4.5-2",
 }
 
 artifacts = [
@@ -217,8 +217,8 @@ artifacts = [
     "org.apache.xbean:xbean-asm7-shaded",
     "org.apache.zookeeper:zookeeper",
     "org.clapper:classutil_{scala}:{classutil}",
-    "org.codehaus.janino:commons-compiler",
-    "org.codehaus.janino:janino",
+    "org.codehaus.janino:commons-compiler:{janino}",
+    "org.codehaus.janino:janino:{janino}",
     "org.datanucleus:datanucleus-api-jdo:4.2.4",  # from hive ...
     "org.datanucleus:datanucleus-rdbms:4.1.19",  # from hive ...
     "org.datanucleus:javax.jdo:3.2.0-m3",  # from hive ...
