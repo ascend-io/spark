@@ -4,6 +4,7 @@ scala_library(
     name = "library",
     srcs = glob([
         "src/main/scala/**/*.scala",
+        "src/main/scala-2.12/**/*.scala",
     ]),
     tags = [
         "maven_coordinates=org.apache.spark:spark-repl_" + scala_rje + ":" + spark_version,
