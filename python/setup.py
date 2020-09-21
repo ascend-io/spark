@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -16,17 +16,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import print_function
 import glob
 import os
 import sys
 from setuptools import setup
 from shutil import copyfile, copytree, rmtree
-
-if sys.version_info < (2, 7):
-    print("Python versions prior to 2.7 are not supported for pip installed PySpark.",
-          file=sys.stderr)
-    sys.exit(-1)
 
 try:
     exec(open('pyspark/version.py').read())
@@ -102,11 +96,12 @@ if (in_spark):
               file=sys.stderr)
         sys.exit(-1)
 
-# If you are changing the versions here, please also change ./python/pyspark/sql/utils.py
+# If you are changing the versions here, please also change ./python/pyspark/sql/pandas/utils.py
 # For Arrow, you should also check ./pom.xml and ensure there are no breaking changes in the
 # binary format protocol with the Java version, see ARROW_HOME/format/* for specifications.
+# Also don't forget to update python/docs/source/getting_started/install.rst.
 _minimum_pandas_version = "0.23.2"
-_minimum_pyarrow_version = "0.15.1"
+_minimum_pyarrow_version = "1.0.0"
 
 try:
     # We copy the shell script to be under pyspark/python/pyspark so that the launcher scripts
@@ -167,6 +162,7 @@ try:
         author_email='dev@spark.apache.org',
         url='https://github.com/apache/spark/tree/master/python',
         packages=['pyspark',
+                  'pyspark.cloudpickle',
                   'pyspark.mllib',
                   'pyspark.mllib.linalg',
                   'pyspark.mllib.stat',
@@ -208,6 +204,8 @@ try:
             'pyspark.examples.src.main.python': ['*.py', '*/*.py']},
         scripts=scripts,
         license='http://www.apache.org/licenses/LICENSE-2.0',
+        # Don't forget to update python/docs/source/getting_started/install.rst
+        # if you're updating the versions or dependencies.
         install_requires=['py4j==0.10.9'],
         extras_require={
             'ml': ['numpy>=1.7'],
@@ -217,13 +215,10 @@ try:
                 'pyarrow>=%s' % _minimum_pyarrow_version,
             ]
         },
+        python_requires='>=3.6',
         classifiers=[
             'Development Status :: 5 - Production/Stable',
             'License :: OSI Approved :: Apache Software License',
-            'Programming Language :: Python :: 2.7',
-            'Programming Language :: Python :: 3',
-            'Programming Language :: Python :: 3.4',
-            'Programming Language :: Python :: 3.5',
             'Programming Language :: Python :: 3.6',
             'Programming Language :: Python :: 3.7',
             'Programming Language :: Python :: 3.8',
