@@ -2,6 +2,19 @@
 # requires perl xpath
 set -e
 set -o pipefail
+
+
+function get_spark_date() {
+  result=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+  if [ ! -f ".spark_revision" ]; then
+    if [ -z "$(git status -s --porcelain)" ]; then
+      # use commit time only if spark revision is defined by git commit sha AND there is no git changes
+      result=$(TZ=UTC git show --quiet --date=format-local:%Y-%m-%dT%H:%M:%SZ --format=%cd HEAD)
+    fi
+  fi
+  echo $result
+}
+
 echo STABLE_spark_user $USER
 SPARK=$(dirname $BASH_SOURCE)/..
 SPARK_VERSION=$( \
@@ -12,5 +25,5 @@ echo STABLE_spark_version $SPARK_VERSION
 echo STABLE_spark_branch $( cat .spark_branch || (cd $SPARK && git rev-parse --abbrev-ref HEAD) 2>&1 )
 echo STABLE_spark_url $( cat .spark_url || (cd $SPARK && git config --get remote.origin.url) 2>&1 )
 echo spark_revision $( cat .spark_revision || (cd $SPARK && git rev-parse HEAD) 2>&1 )
-echo spark_date $(date -u +%Y-%m-%dT%H:%M:%SZ)
+echo spark_date $( cd $SPARK && get_spark_date )
 exit 0

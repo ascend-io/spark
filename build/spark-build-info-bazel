@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 set -e
 set -o pipefail
-while read line
-do
-    changed=$(echo "$line" | sed 's/.*spark_\(.*\)/\1/')
-    if [ "$changed" != "$line" ]; then
-        echo $changed | tr ' ' '='
+while read line; do
+  tokens=($line)
+  if [ "${#tokens[@]}" -eq "2" ]; then
+    key=${tokens[0]}
+    value=${tokens[1]}
+    changed_key=$(echo "$key" | sed 's/.*spark_\(.*\)/\1/')
+    if [ "$changed_key" != "$key" ]; then
+      echo $changed_key"="$value
     fi
+  fi
 done
