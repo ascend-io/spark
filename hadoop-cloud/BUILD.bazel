@@ -1,0 +1,19 @@
+load("//:defs.bzl", "scala_rje")
+
+scala_library(
+    name = "hadoop-cloud",
+    srcs = glob([
+        "src/hadoop-3/main/scala/**/*.scala",
+    ]),
+    tags = [
+        "maven_coordinates=org.apache.spark:spark-hadoop-cloud_" + scala_rje + ":" + spark_version,
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//core",
+        "@maven//:org_apache_hadoop_hadoop_common",
+        "@maven//:org_apache_hadoop_hadoop_mapreduce_client_core",
+        "@maven//:org_apache_parquet_parquet_hadoop",
+        "@maven//:org_slf4j_slf4j_api",
+    ],
+)
