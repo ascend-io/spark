@@ -12,8 +12,9 @@ load(
 )
 
 maven_servers = [
+    "https://maven-central.storage-download.googleapis.com/repos/central/data",
     "https://repo1.maven.org/maven2",
-    "https://repo.spring.io/plugins-release",
+    "https://conjars.org/repo",
 ]
 
 grpc_tag = "1.21.0"
